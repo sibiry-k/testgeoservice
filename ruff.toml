@@ -43,5 +43,4 @@ max-doc-length = 79
 max-line-length = 79
 
 [lint.per-file-ignores]
-"src/alembic/*" = ["ANN", "COM", "D", "E", "W"]
-"excel_to_db_loader.py" = ["ANN", "C901"]
+"src/alembic/*" = ["ANN", "COM", "D", "E", "W", "I", "F"]
