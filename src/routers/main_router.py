@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .endpoints import local_router
+from .api import local_router
 
 main_router = APIRouter()
 

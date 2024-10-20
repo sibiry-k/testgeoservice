@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     """Базовые настройки для БД."""
 
     app_title: str = 'GeoService'
+    app_title_remote: str
+    api_url: str
     postgres_db: str
     postgres_user: str
     postgres_password: str

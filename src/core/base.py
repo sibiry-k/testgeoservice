@@ -1,2 +1,2 @@
 from .db import Base  # noqa
-from models import Query  # noqa
+from models.query import Query  # noqa
