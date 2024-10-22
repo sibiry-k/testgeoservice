@@ -1,19 +1,27 @@
-from core.db import AsyncSessionLocal
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from models.query import Query
-from schemas.query import QueryCreate
+from schemas.query import QueryDB
+
+from .base import CRUDBase
 
 
-async def create_query(
-    new_query: QueryCreate,
-) -> Query:
-    """CRUD-операция для создания объекта Query."""
-    new_query_data = new_query.dict()
+class CRUDQuery(CRUDBase):
+    """Схема для работы с моделью Query."""
 
-    db_query = Query(**new_query_data)
+    async def get_query_by_cad_num(
+        self,
+        cad_num: str,
+        session: AsyncSession,
+    ) -> QueryDB:
+        """Схема для получения истории по кадастровому номеру."""
+        db_query_cad_num = await session.execute(
+            select(Query).where(
+                Query.cad_num == cad_num,
+            ),
+        )
+        return db_query_cad_num.scalars().first()
 
-    async with AsyncSessionLocal() as session:
-        session.add(db_query)
-        await session.commit()
-        await session.refresh(db_query)
 
-    return db_query
+query_crud = CRUDQuery(Query)

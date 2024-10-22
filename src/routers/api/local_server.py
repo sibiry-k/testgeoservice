@@ -1,11 +1,10 @@
-import httpx
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.config import settings
-from crud.query import create_query
-from models.query import Query
-from schemas.query import QueryCreate
+from core.db import get_async_session
+from crud.query import query_crud
+from schemas.query import QueryCreate, QueryDB
 
 router = APIRouter()
 
@@ -16,19 +15,39 @@ async def check_ping(request: Request) -> JSONResponse:
     return {"server": "OK!"}
 
 
-@router.post('/query')
+@router.post(
+    '/query',
+    response_model=QueryDB,
+    response_model_exclude_none=True,
+    )
 async def create_new_query(
     query: QueryCreate,
-) -> Query:
+    session: AsyncSession = Depends(get_async_session),
+) -> QueryCreate:
     """Создает запись в таблице Query."""
-    return await create_query(query)
+    return await query_crud.create(query, session)
 
 
-@router.get('/result')
-async def get_result(request: Request) -> JSONResponse:
-    """Получает от удаленного сервера результат обработки запроса."""
-    api_url = settings.api_url
+@router.get(
+    '/history/',
+    response_model=list[QueryDB],
+    response_model_exclude_none=True,
+)
+async def get_history(
+    session: AsyncSession = Depends(get_async_session),
+) -> QueryDB:
+    """Получение списка всех записей модели Query в БД."""
+    return await query_crud.get_all(session)
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get(api_url)
-        return response.json()
+
+@router.get(
+    '/history/{cad_num}',
+    response_model=QueryDB,
+    response_model_exclude_none=True,
+)
+async def get_history_by_cad_num(
+    cad_num: str,
+    session: AsyncSession = Depends(get_async_session),
+) -> QueryDB:
+    """Получение истории по кадастровому номеру."""
+    return await query_crud.get_query_by_cad_num(cad_num, session)
