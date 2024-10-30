@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     db_host: str
     db_port: str
     debug_mode: bool = True
+    secret: str = 'SECRET'
 
     model_config = SettingsConfigDict(
         env_file=DOTENV,

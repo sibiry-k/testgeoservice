@@ -1,6 +1,8 @@
 from sqlalchemy import (
     Boolean,
     Column,
+    ForeignKey,
+    Integer,
     String,
 )
 
@@ -14,3 +16,4 @@ class Query(Base):
     longitude = Column(String, nullable=False)
     latitude = Column(String, nullable=False)
     response = Column(Boolean, nullable=True)
+    user_id = Column(Integer, ForeignKey('user.id'))

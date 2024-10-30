@@ -46,3 +46,5 @@ max-line-length = 79
 "src/alembic/*" = ["ANN", "COM", "D", "E", "W", "I", "F"]
 #
 "src/crud/base.py" = ["ANN", "D"]
+#
+"src/core/user.py" = ["ANN",]

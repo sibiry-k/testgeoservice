@@ -8,14 +8,14 @@ from .base import CRUDBase
 
 
 class CRUDQuery(CRUDBase):
-    """Схема для работы с моделью Query."""
+    """CRUD для работы с моделью Query."""
 
     async def get_query_by_cad_num(
         self,
         cad_num: str,
         session: AsyncSession,
     ) -> QueryDB:
-        """Схема для получения истории по кадастровому номеру."""
+        """CRUD для получения истории по кадастровому номеру."""
         db_query_cad_num = await session.execute(
             select(Query).where(
                 Query.cad_num == cad_num,

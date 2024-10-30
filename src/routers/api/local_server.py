@@ -1,9 +1,12 @@
+import httpx
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.config import settings
 from core.db import get_async_session
 from crud.query import query_crud
+from models.query import Query
 from schemas.query import QueryCreate, QueryDB
 
 router = APIRouter()
@@ -23,9 +26,22 @@ async def check_ping(request: Request) -> JSONResponse:
 async def create_new_query(
     query: QueryCreate,
     session: AsyncSession = Depends(get_async_session),
-) -> QueryCreate:
-    """Создает запись в таблице Query."""
-    return await query_crud.create(query, session)
+) -> QueryDB:
+    """Создает запись в таблице Query и отправляет запрос на внешний API."""
+    Query(
+        cud_num=query.cad_num,
+        longitude=query.longitude,
+        latitude=query.latitude,
+        response='true',
+    )
+    async with httpx.AsyncClient() as client:
+
+        response = await client.get(settings.api_url)
+        print(response)
+        query = Query(
+            response='true',
+        )
+        return await query_crud.create(query, session)
 
 
 @router.get(
