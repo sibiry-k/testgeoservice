@@ -1,5 +1,5 @@
+import asyncio
 import random
-# import asyncio
 
 import uvicorn
 from fastapi import FastAPI
@@ -16,12 +16,12 @@ def get_application() -> FastAPI:
 app = get_application()
 
 
-@app.get("/result")
+@app.post("/result")
 async def result() -> str:
     """Отвечает рандомно true или false."""
     result = ['true', 'false']
-    # time_lag = random.randrange(0, 60, 1)
-    # await asyncio.sleep(time_lag)
+    time_lag = random.randrange(0, 60, 1)
+    await asyncio.sleep(time_lag)
     return random.choice(result)
 
 

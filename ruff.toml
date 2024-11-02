@@ -48,3 +48,5 @@ max-line-length = 79
 "src/crud/base.py" = ["ANN", "D"]
 #
 "src/core/user.py" = ["ANN",]
+#
+"src/routers/api/local_server.py" = ["ANN",]

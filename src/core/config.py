@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-DOTENV = os.path.join(os.path.dirname(__file__), '../../infra/.env')
+DOTENV = os.path.join(os.path.dirname(__file__), '../../.env')
 
 
 class Settings(BaseSettings):
