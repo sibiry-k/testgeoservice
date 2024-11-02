@@ -22,7 +22,6 @@ async def request_to_remote_server(cad_num, session):
             remote_server_response = True
         else:
             remote_server_response = False
-        print(cad_num)
         result = await session.execute(
             select(Query).where(Query.cad_num == cad_num),
         )

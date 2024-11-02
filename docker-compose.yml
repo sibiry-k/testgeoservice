@@ -1,5 +1,5 @@
 volumes:
-  pg_data:
+  tg_pg_data:
 
 services:
   db:
@@ -8,19 +8,33 @@ services:
     env_file:
       - .env
     volumes:
-      - pg_data:/var/lib/postgresql/pg_data
+      - tg_pg_data:/var/lib/postgresql/pg_data
+  
+  migrations:
+    build: ./src/
+    container_name: Migrations
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: bash -c "alembic upgrade head"
+
   local_service:
     build: ./src/
     container_name: LocalService
     env_file:
       - .env
     depends_on:
-      - db
+      - migrations
+  
   remote_service:
     container_name: RemoteService
     build: ./remote_service/
     ports:
       - '9000:9000'
+    depends_on:
+      - local_service
+  
   gateway:
     image: nginx
     container_name: gateway
